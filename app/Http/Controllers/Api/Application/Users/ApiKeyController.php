@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Application\Users;
 
+use App\Data\Api\Client\ApiKeyData;
 use App\Exceptions\DisplayException;
 use App\Facades\Activity;
 use App\Http\Controllers\Api\Application\ApplicationApiController;
@@ -10,7 +11,6 @@ use App\Http\Requests\Api\Application\Users\GetUserApiKeysRequest;
 use App\Http\Requests\Api\Application\Users\StoreUserApiKeyRequest;
 use App\Models\ApiKey;
 use App\Models\User;
-use App\Transformers\Api\Application\ApiKeyTransformer;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\JsonResponse;
 
@@ -26,8 +26,8 @@ class ApiKeyController extends ApplicationApiController
      */
     public function index(GetUserApiKeysRequest $request, User $user): array
     {
-        return $this->fractal->collection($user->apiKeys)
-            ->transformWith($this->getTransformer(ApiKeyTransformer::class))
+        return $this->response->collection($user->apiKeys)
+            ->transformWith(ApiKeyData::class)
             ->toArray();
     }
 
@@ -54,8 +54,8 @@ class ApiKeyController extends ApplicationApiController
             ->property('identifier', $token->accessToken->identifier)
             ->log();
 
-        return $this->fractal->item($token->accessToken)
-            ->transformWith($this->getTransformer(ApiKeyTransformer::class))
+        return $this->response->item($token->accessToken)
+            ->transformWith(ApiKeyData::class)
             ->addMeta(['secret_token' => $token->plainTextToken])
             ->toArray();
     }

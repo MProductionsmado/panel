@@ -134,7 +134,7 @@ class Subuser extends Model implements Validatable
             $groupData = [
                 'name' => $name,
                 'hidden' => $customPermission['hidden'] ?? $groupData['hidden'] ?? false,
-                'icon' => $customPermission['icon'] ?? $groupData['icon'],
+                'icon' => $customPermission['icon'] ?? $groupData['icon'] ?? null,
                 'permissions' => array_unique(array_merge($groupData['permissions'] ?? [], $customPermission['permissions'])),
                 'translation_prefix' => $customPermission['translation_prefix'] ?? $groupData['translation_prefix'] ?? 'server/user.permissions',
             ];
